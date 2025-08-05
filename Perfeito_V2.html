@@ -2177,7 +2177,7 @@
         function updateMtbfMttr() {
             const totalHours = parseFloat(document.getElementById('totalHoursInput').value) || 1000;
             const totalFailures = parseFloat(document.getElementById('totalFailuresInput').value) || 1;
-            const repairTime = parseFloat(document.getElementById('mttrInput').value) || 12;
+            const totalRepairTime = parseFloat(document.getElementById('mttrInput').value) || 12;
             
             // Calcular MTBF
             const mtbf = totalHours / totalFailures;
@@ -2185,9 +2185,9 @@
             document.getElementById('mtbfCalculation').textContent = `${totalHours} / ${totalFailures} = ${mtbf}`;
             
             // Calcular MTTR
-            const mttr = repairTime;
+            const mttr = totalRepairTime / totalFailures;
             document.getElementById('mttrResult').textContent = mttr + 'h';
-            document.getElementById('mttrCalculation').textContent = `${repairTime} / ${totalFailures} = ${mttr}`;
+            document.getElementById('mttrCalculation').textContent = `${totalRepairTime} / ${totalFailures} = ${mttr}`;
             
             // Atualizar campos de input
             document.getElementById('mtbfInput').value = mtbf;
