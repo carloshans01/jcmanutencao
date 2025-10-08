@@ -33,18 +33,70 @@
 
         <!-- Conteúdo da Aba 1 - Dashboard -->
         <div id="tab1" class="tab-content active">
+            <div class="kpi-section">
+                <h2 class="dashboard-title"><i class="fas fa-tachometer-alt"></i> Indicadores Chave de Performance (KPIs)</h2>
+                <div class="kpi-grid">
+                    <div class="result-card availability">
+                        <div class="result-name">Disponibilidade</div>
+                        <div class="result-value" id="availabilityResult">95,34%</div>
+                        <div class="result-formula">MTBF / (MTBF + MTTR)</div>
+                    </div>
+                    <div class="result-card mtbf">
+                        <div class="result-name">MTBF (h)</div>
+                        <div class="result-value" id="mtbfResult">1000</div>
+                        <div class="result-formula">Tempo Operação / Falhas</div>
+                    </div>
+                    <div class="result-card mttr">
+                        <div class="result-name">MTTR (h)</div>
+                        <div class="result-value" id="mttrResult">12</div>
+                        <div class="result-formula">Tempo Reparo / Falhas</div>
+                    </div>
+                    <div class="result-card cpmv">
+                        <div class="result-name">Custo Total</div>
+                        <div class="result-value" id="totalCostResult">R$ 6000</div>
+                        <div class="result-formula">Soma dos Custos de Manutenção</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="filters-section">
+                <div class="filter-group">
+                    <label for="time-filter"><i class="fas fa-calendar-alt"></i> Período:</label>
+                    <select id="time-filter" onchange="applyFilters()">
+                        <option value="all">Todo o Período</option>
+                        <option value="30">Últimos 30 dias</option>
+                        <option value="90">Últimos 90 dias</option>
+                        <option value="365">Último Ano</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="type-filter"><i class="fas fa-tools"></i> Tipo:</label>
+                    <select id="type-filter" onchange="applyFilters()">
+                        <option value="all">Todos os Tipos</option>
+                        <option value="Preventiva">Preventiva</option>
+                        <option value="Corretiva">Corretiva</option>
+                        <option value="Preditiva">Preditiva</option>
+                    </select>
+                </div>
+                <button class="clear-filters-btn" onclick="clearFilters()"><i class="fas fa-times"></i> Limpar Filtros</button>
+            </div>
+
+            <div class="predictive-alerts-section card">
+                <h3 class="card-title"><i class="fas fa-bell"></i> Alertas Preditivos</h3>
+                <ul id="predictiveAlertsList">
+                    <!-- Alertas serão inseridos aqui via JavaScript -->
+                </ul>
+            </div>
+
             <h2 class="dashboard-title">
                 <i class="fas fa-chart-line"></i>
-                Análise Gráfica do Histórico
+                Análise Gráfica
             </h2>
 
             <div class="charts-grid">
                 <div class="chart-card">
                     <div class="chart-header">
                         <h3 class="chart-title"><i class="fas fa-tools"></i> Tipos de Manutenção</h3>
-                        <div class="chart-actions">
-                            <button onclick="updateTypesChart()"><i class="fas fa-sync-alt"></i> Atualizar</button>
-                        </div>
                     </div>
                     <div class="chart-container">
                         <canvas id="typesChart"></canvas>
@@ -54,9 +106,6 @@
                 <div class="chart-card">
                     <div class="chart-header">
                         <h3 class="chart-title"><i class="fas fa-flag"></i> Status das Ordens</h3>
-                        <div class="chart-actions">
-                            <button onclick="updateStatusChart()"><i class="fas fa-sync-alt"></i> Atualizar</button>
-                        </div>
                     </div>
                     <div class="chart-container">
                         <canvas id="statusChart"></canvas>
@@ -65,10 +114,7 @@
 
                 <div class="chart-card">
                     <div class="chart-header">
-                        <h3 class="chart-title"><i class="fas fa-money-bill-wave"></i> Top 5 Custos</h3>
-                        <div class="chart-actions">
-                            <button onclick="updateTopCostsChart()"><i class="fas fa-sync-alt"></i> Atualizar</button>
-                        </div>
+                        <h3 class="chart-title"><i class="fas fa-money-bill-wave"></i> Top 5 Custos por Componente</h3>
                     </div>
                     <div class="chart-container">
                         <canvas id="topCostsChart"></canvas>
@@ -95,91 +141,10 @@
 
                 <div class="chart-card">
                     <div class="chart-header">
-                        <h3 class="chart-title"><i class="fas fa-percentage"></i> % Ordens Atendidas no SLA</h3>
-                        <div class="sla-info">SLA: Tempo máximo para resolver falhas (Corretiva ≤ 4h, Preventiva ≤ 24h)</div>
-                    </div>
-                    <div class="chart-container">
-                        <canvas id="slaChart"></canvas>
-                    </div>
-                </div>
-
-                <div class="chart-card">
-                    <div class="chart-header">
                         <h3 class="chart-title"><i class="fas fa-user-cog"></i> Técnicos por Execução</h3>
                     </div>
                     <div class="chart-container">
                         <canvas id="techniciansChart"></canvas>
-                    </div>
-                </div>
-            </div>
-
-            <div class="results-section">
-                <h3 class="results-title"><i class="fas fa-calculator"></i> Resultados dos Cálculos</h3>
-                <div class="results-grid">
-                    <div class="result-card mtbf">
-                        <div class="result-name">MTBF (Tempo Médio Entre Falhas)</div>
-                        <div class="result-value" id="mtbfResult">1000h</div>
-                        <div class="result-formula">
-                            <span class="formula-highlight">Fórmula:</span> Tempo de Operação / Total de Falhas
-                        </div>
-                        <div class="result-formula">
-                            <span class="formula-highlight">Cálculo:</span> <span id="mtbfCalculation">1000 / 1 = 1000</span>
-                        </div>
-                    </div>
-
-                    <div class="result-card mttr">
-                        <div class="result-name">MTTR (Tempo Médio de Reparo)</div>
-                        <div class="result-value" id="mttrResult">12h</div>
-                        <div class="result-formula">
-                            <span class="formula-highlight">Fórmula:</span> Tempo de Reparo / Total de Falhas
-                        </div>
-                        <div class="result-formula">
-                            <span class="formula-highlight">Cálculo:</span> <span id="mttrCalculation">12 / 1 = 12</span>
-                        </div>
-                    </div>
-
-                    <div class="result-card availability">
-                        <div class="result-name">Disponibilidade</div>
-                        <div class="result-value" id="availabilityResult">95,34%</div>
-                        <div class="result-formula">
-                            <span class="formula-highlight">Fórmula:</span> MTBF / (MTBF + MTTR) × 100
-                        </div>
-                        <div class="result-formula">
-                            <span class="formula-highlight">Cálculo:</span> <span id="availabilityCalculation">1000 / (1000 + 12) × 100</span>
-                        </div>
-                    </div>
-
-                    <div class="result-card reliability">
-                        <div class="result-name">Confiabilidade</div>
-                        <div class="result-value" id="reliabilityResult">81,87%</div>
-                        <div class="result-formula">
-                            <span class="formula-highlight">Fórmula:</span> e^(-t/MTBF) × 100
-                        </div>
-                        <div class="result-formula">
-                            <span class="formula-highlight">Cálculo:</span> <span id="reliabilityCalculation">e^(-50/1000) × 100</span>
-                        </div>
-                    </div>
-
-                    <div class="result-card cpmv">
-                        <div class="result-name">CPMV</div>
-                        <div class="result-value" id="cpmvResult">5%</div>
-                        <div class="result-formula">
-                            <span class="formula-highlight">Fórmula:</span> (Custo Manutenção / Valor Ativos) × 100
-                        </div>
-                        <div class="result-formula">
-                            <span class="formula-highlight">Cálculo:</span> <span id="cpmvCalculation">(50000 / 1000000) × 100</span>
-                        </div>
-                    </div>
-
-                    <div class="result-card preventive">
-                        <div class="result-name">Preventiva vs Corretiva</div>
-                        <div class="result-value" id="preventiveResult">80%</div>
-                        <div class="result-formula">
-                            <span class="formula-highlight">Fórmula:</span> (Preventivas / Total) × 100
-                        </div>
-                        <div class="result-formula">
-                            <span class="formula-highlight">Cálculo:</span> <span id="preventiveCalculation">(80 / 100) × 100</span>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -237,6 +202,7 @@
                             <th>Previsão de Próxima Troca</th>
                             <th>Tempo Médio entre Trocas</th>
                             <th>Custo Unitário (R$)</th>
+                            <th>Status de Saúde</th>
                             <th>Ações</th>
                         </tr>
                     </thead>
@@ -249,6 +215,7 @@
                             <td><input type="date" class="editable-cell" value=""></td>
                             <td><input type="text" class="editable-cell" value="30 dias"></td>
                             <td><input type="number" class="editable-cell" value="85" min="0"></td>
+                            <td><div class="health-status status-healthy">Saudável</div></td>
                             <td class="action-cell">
                                 <button class="action-btn save-btn" onclick="savePartRow(this)"><i class="fas fa-save"></i></button>
                                 <button class="action-btn cancel-btn" onclick="cancelPartEdit(this)"><i class="fas fa-times"></i></button>
@@ -263,6 +230,7 @@
                             <td><input type="date" class="editable-cell" value=""></td>
                             <td><input type="text" class="editable-cell" value="45 dias"></td>
                             <td><input type="number" class="editable-cell" value="250" min="0"></td>
+                            <td><div class="health-status status-attention">Atenção</div></td>
                             <td class="action-cell">
                                 <button class="action-btn save-btn" onclick="savePartRow(this)"><i class="fas fa-save"></i></button>
                                 <button class="action-btn cancel-btn" onclick="cancelPartEdit(this)"><i class="fas fa-times"></i></button>
@@ -277,6 +245,7 @@
                             <td><input type="date" class="editable-cell" value=""></td>
                             <td><input type="text" class="editable-cell" value="60 dias"></td>
                             <td><input type="number" class="editable-cell" value="45" min="0"></td>
+                            <td><div class="health-status status-healthy">Saudável</div></td>
                             <td class="action-cell">
                                 <button class="action-btn save-btn" onclick="savePartRow(this)"><i class="fas fa-save"></i></button>
                                 <button class="action-btn cancel-btn" onclick="cancelPartEdit(this)"><i class="fas fa-times"></i></button>
@@ -291,6 +260,7 @@
                             <td><input type="date" class="editable-cell" value=""></td>
                             <td><input type="text" class="editable-cell" value="90 dias"></td>
                             <td><input type="number" class="editable-cell" value="180" min="0"></td>
+                            <td><div class="health-status status-healthy">Saudável</div></td>
                             <td class="action-cell">
                                 <button class="action-btn save-btn" onclick="savePartRow(this)"><i class="fas fa-save"></i></button>
                                 <button class="action-btn cancel-btn" onclick="cancelPartEdit(this)"><i class="fas fa-times"></i></button>
@@ -305,6 +275,7 @@
                             <td><input type="date" class="editable-cell" value=""></td>
                             <td><input type="text" class="editable-cell" value="20 dias"></td>
                             <td><input type="number" class="editable-cell" value="12" min="0"></td>
+                            <td><div class="health-status status-replace">Substituir</div></td>
                             <td class="action-cell">
                                 <button class="action-btn save-btn" onclick="savePartRow(this)"><i class="fas fa-save"></i></button>
                                 <button class="action-btn cancel-btn" onclick="cancelPartEdit(this)"><i class="fas fa-times"></i></button>
