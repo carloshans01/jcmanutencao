@@ -204,12 +204,35 @@ function updateKpis(data) {
 }
 
 function updateChart(chart, labels, data, chartLabel) {
+    const isDarkMode = document.body.classList.contains('dark-mode');
+    const chartColors = isDarkMode
+        ? ['#3B82F6', '#EF4444', '#10B981', '#F59E0B', '#A855F7', '#6366F1']
+        : ['#60A5FA', '#F87171', '#34D399', '#FBBF24', '#C084FC', '#818CF8'];
+
+    const gridColor = isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)';
+    const textColor = isDarkMode ? '#F9FAFB' : '#1F2937';
+
     chart.data.labels = labels;
     chart.data.datasets = [{
         label: chartLabel,
         data: data,
-        backgroundColor: ['#00a8f3', '#e83f5b', '#04d361', '#ffcd1e', '#9c27b0'],
+        backgroundColor: chartColors,
+        borderColor: isDarkMode ? '#1F2937' : '#FFFFFF',
+        borderWidth: 2,
     }];
+
+    chart.options.plugins.legend.labels.color = textColor;
+    if (chart.options.scales) {
+        if (chart.options.scales.x) {
+            chart.options.scales.x.ticks.color = textColor;
+            chart.options.scales.x.grid.color = gridColor;
+        }
+        if (chart.options.scales.y) {
+            chart.options.scales.y.ticks.color = textColor;
+            chart.options.scales.y.grid.color = gridColor;
+        }
+    }
+
     chart.update();
 }
 
@@ -478,17 +501,143 @@ function recalculateMetrics() { /* ... */ }
 function saveMetricsData() { /* ... */ }
 function loadMetricsData() { /* ... */ }
 
-// Inicialização
-window.addEventListener('load', function() {
-    initCharts();
-    loadProfileData();
-    loadMaintenanceData();
-    loadPartsData();
-    loadFracasData();
-    loadMetricsData();
-    applyFilters(); // Aplica os filtros iniciais (todos)
+// Funções de Exportação CSV
+function exportToCsv(filename, rows) {
+    const separator = ';';
+    const csvContent = "data:text/csv;charset=utf-8,"
+        + rows.map(row => row.join(separator)).join("\n");
 
-    document.querySelectorAll('.editable-cell').forEach(cell => {
-        cell.addEventListener('change', saveMaintenanceData);
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", filename);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
+
+function exportTableToCsv(tableId, filename) {
+    const table = document.getElementById(tableId);
+    const rows = [];
+    // Cabeçalhos
+    const headers = [];
+    table.querySelectorAll('thead th').forEach(header => {
+        if (!header.querySelector('input[type="checkbox"]')) { // Ignora checkbox
+            headers.push(header.innerText);
+        }
     });
+    rows.push(headers);
+
+    // Linhas
+    table.querySelectorAll('tbody tr').forEach(row => {
+        const rowData = [];
+        row.querySelectorAll('td').forEach((cell, index) => {
+            if (index > 0 && index < row.cells.length -1) { // Ignora checkbox e coluna de ações
+                const input = cell.querySelector('input, select');
+                if (input) {
+                    rowData.push(input.value);
+                } else {
+                    rowData.push(cell.innerText);
+                }
+            }
+        });
+        rows.push(rowData);
+    });
+
+    exportToCsv(filename, rows);
+}
+
+function exportPartsToCsv() {
+    exportTableToCsv('partsTable', 'inventario_pecas.csv');
+}
+
+function exportMaintenanceToCsv() {
+    exportTableToCsv('maintenanceTable', 'historico_manutencao.csv');
+}
+
+function exportFracasToCsv() {
+    exportTableToCsv('fracasTable', 'registro_fracas.csv');
+}
+
+// Função de Filtro da Tabela de Manutenção
+function filterMaintenanceTable() {
+    const searchInput = document.getElementById('maintenanceSearch').value.toUpperCase();
+    const statusFilter = document.getElementById('status-filter').value;
+    const table = document.getElementById('maintenanceTable');
+    const rows = table.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+
+    for (let i = 0; i < rows.length; i++) {
+        const componentCell = rows[i].getElementsByTagName('td')[3];
+        const statusCell = rows[i].getElementsByTagName('td')[5];
+        let display = true;
+
+        if (componentCell && statusCell) {
+            const componentValue = componentCell.querySelector('input').value.toUpperCase();
+            const statusValue = statusCell.querySelector('select').value;
+
+            // Filtro de Pesquisa
+            if (searchInput && !componentValue.includes(searchInput)) {
+                display = false;
+            }
+
+            // Filtro de Status
+            if (statusFilter !== 'all' && statusValue !== statusFilter) {
+                display = false;
+            }
+
+            rows[i].style.display = display ? '' : 'none';
+        }
+    }
+}
+
+
+document.addEventListener('DOMContentLoaded', () => {
+    const themeToggle = document.getElementById('theme-toggle');
+
+    // Função para aplicar o tema com base no localStorage
+    const applyTheme = () => {
+        const currentTheme = localStorage.getItem('theme') || 'light';
+        if (currentTheme === 'dark') {
+            document.body.classList.add('dark-mode');
+            if (themeToggle) themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+        } else {
+            document.body.classList.remove('dark-mode');
+            if (themeToggle) themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+        }
+    };
+
+    // Lógica de clique do botão de tema
+    if (themeToggle) {
+        themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            let theme = document.body.classList.contains('dark-mode') ? 'dark' : 'light';
+            localStorage.setItem('theme', theme);
+            applyTheme(); // Aplica o ícone correto
+
+            // Recarrega os gráficos para aplicar as novas cores do tema
+            if (typeof initCharts === 'function' && typeof applyFilters === 'function') {
+                Object.values(Chart.instances).forEach(chart => chart.destroy());
+                initCharts();
+                applyFilters();
+            }
+        });
+    }
+
+    // Aplica o tema na carga inicial
+    applyTheme();
+});
+
+
+// Inicialização
+document.addEventListener('DOMContentLoaded', function() {
+    // A inicialização principal dos gráficos e dados agora pode ser mais limpa
+    if (document.getElementById('typesChart')) { // Executa apenas se estivermos na página do dashboard
+        initCharts();
+        loadProfileData();
+        loadMaintenanceData();
+        loadPartsData();
+        loadFracasData();
+        loadMetricsData();
+        applyFilters(); // Aplica os filtros iniciais (todos)
+    }
 });

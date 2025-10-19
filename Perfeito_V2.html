@@ -16,11 +16,16 @@
                 <i class="fas fa-industry"></i>
                 <h1>Dashboard de Manutenção - Torno CNC</h1>
             </div>
-            <div class="user-info" id="userProfile">
-                <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Engenheiro de Manutenção" id="userImage">
-                <div class="user-details" id="userDetails">
-                    <h3 id="userName">Carlos Oliveira</h3>
-                    <p id="userPosition">Engenheiro de Manutenção Sênior</p>
+            <div class="header-right">
+                <button class="theme-toggle-btn" id="theme-toggle">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <div class="user-info" id="userProfile">
+                    <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Engenheiro de Manutenção" id="userImage">
+                    <div class="user-details" id="userDetails">
+                        <h3 id="userName">Carlos Oliveira</h3>
+                        <p id="userPosition">Engenheiro de Manutenção Sênior</p>
+                    </div>
                 </div>
             </div>
         </header>
@@ -189,101 +194,106 @@
                         <button class="export-btn" onclick="exportPartsToExcel()">
                             <i class="fas fa-file-export"></i> Exportar Excel
                         </button>
+                        <button class="export-btn" onclick="exportPartsToCsv()">
+                            <i class="fas fa-file-csv"></i> Exportar CSV
+                        </button>
                         <input type="file" id="importPartsFile" class="file-input-hidden" accept=".xlsx, .xls" onchange="importPartsFromExcel(event)">
                     </div>
                 </div>
-                <table class="critical-parts-table" id="partsTable">
-                    <thead>
-                        <tr>
-                            <th><input type="checkbox" id="selectAllParts" onchange="toggleSelectAllParts()"></th>
-                            <th>Peça</th>
-                            <th>Estoque Atual</th>
-                            <th>Estoque Mínimo</th>
-                            <th>Previsão de Próxima Troca</th>
-                            <th>Tempo Médio entre Trocas</th>
-                            <th>Custo Unitário (R$)</th>
-                            <th>Status de Saúde</th>
-                            <th>Ações</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><input type="checkbox" class="part-select"></td>
-                            <td><input type="text" class="editable-cell" value="Filtro de Ar"></td>
-                            <td><input type="number" class="editable-cell" value="12" min="0"></td>
-                            <td><input type="number" class="editable-cell" value="5" min="0"></td>
-                            <td><input type="date" class="editable-cell" value=""></td>
-                            <td><input type="text" class="editable-cell" value="30 dias"></td>
-                            <td><input type="number" class="editable-cell" value="85" min="0"></td>
-                            <td><div class="health-status status-healthy">Saudável</div></td>
-                            <td class="action-cell">
-                                <button class="action-btn save-btn" onclick="savePartRow(this)"><i class="fas fa-save"></i></button>
-                                <button class="action-btn cancel-btn" onclick="cancelPartEdit(this)"><i class="fas fa-times"></i></button>
-                                <button class="action-btn delete-btn" onclick="deletePartRow(this)"><i class="fas fa-trash"></i></button>
-                            </td>
-                        </tr>
-                        <tr class="low-stock">
-                            <td><input type="checkbox" class="part-select"></td>
-                            <td><input type="text" class="editable-cell" value="Lubrificante Hidráulico"></td>
-                            <td><input type="number" class="editable-cell" value="3" min="0"></td>
-                            <td><input type="number" class="editable-cell" value="5" min="0"></td>
-                            <td><input type="date" class="editable-cell" value=""></td>
-                            <td><input type="text" class="editable-cell" value="45 dias"></td>
-                            <td><input type="number" class="editable-cell" value="250" min="0"></td>
-                            <td><div class="health-status status-attention">Atenção</div></td>
-                            <td class="action-cell">
-                                <button class="action-btn save-btn" onclick="savePartRow(this)"><i class="fas fa-save"></i></button>
-                                <button class="action-btn cancel-btn" onclick="cancelPartEdit(this)"><i class="fas fa-times"></i></button>
-                                <button class="action-btn delete-btn" onclick="deletePartRow(this)"><i class="fas fa-trash"></i></button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><input type="checkbox" class="part-select"></td>
-                            <td><input type="text" class="editable-cell" value="Correia Trapezoidal"></td>
-                            <td><input type="number" class="editable-cell" value="8" min="0"></td>
-                            <td><input type="number" class="editable-cell" value="3" min="0"></td>
-                            <td><input type="date" class="editable-cell" value=""></td>
-                            <td><input type="text" class="editable-cell" value="60 dias"></td>
-                            <td><input type="number" class="editable-cell" value="45" min="0"></td>
-                            <td><div class="health-status status-healthy">Saudável</div></td>
-                            <td class="action-cell">
-                                <button class="action-btn save-btn" onclick="savePartRow(this)"><i class="fas fa-save"></i></button>
-                                <button class="action-btn cancel-btn" onclick="cancelPartEdit(this)"><i class="fas fa-times"></i></button>
-                                <button class="action-btn delete-btn" onclick="deletePartRow(this)"><i class="fas fa-trash"></i></button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><input type="checkbox" class="part-select"></td>
-                            <td><input type="text" class="editable-cell" value="Disco de Freio"></td>
-                            <td><input type="number" class="editable-cell" value="15" min="0"></td>
-                            <td><input type="number" class="editable-cell" value="5" min="0"></td>
-                            <td><input type="date" class="editable-cell" value=""></td>
-                            <td><input type="text" class="editable-cell" value="90 dias"></td>
-                            <td><input type="number" class="editable-cell" value="180" min="0"></td>
-                            <td><div class="health-status status-healthy">Saudável</div></td>
-                            <td class="action-cell">
-                                <button class="action-btn save-btn" onclick="savePartRow(this)"><i class="fas fa-save"></i></button>
-                                <button class="action-btn cancel-btn" onclick="cancelPartEdit(this)"><i class="fas fa-times"></i></button>
-                                <button class="action-btn delete-btn" onclick="deletePartRow(this)"><i class="fas fa-trash"></i></button>
-                            </td>
-                        </tr>
-                        <tr class="low-stock">
-                            <td><input type="checkbox" class="part-select"></td>
-                            <td><input type="text" class="editable-cell" value="Junta O-Ring"></td>
-                            <td><input type="number" class="editable-cell" value="2" min="0"></td>
-                            <td><input type="number" class="editable-cell" value="10" min="0"></td>
-                            <td><input type="date" class="editable-cell" value=""></td>
-                            <td><input type="text" class="editable-cell" value="20 dias"></td>
-                            <td><input type="number" class="editable-cell" value="12" min="0"></td>
-                            <td><div class="health-status status-replace">Substituir</div></td>
-                            <td class="action-cell">
-                                <button class="action-btn save-btn" onclick="savePartRow(this)"><i class="fas fa-save"></i></button>
-                                <button class="action-btn cancel-btn" onclick="cancelPartEdit(this)"><i class="fas fa-times"></i></button>
-                                <button class="action-btn delete-btn" onclick="deletePartRow(this)"><i class="fas fa-trash"></i></button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                <div class="table-container">
+                    <table class="critical-parts-table" id="partsTable">
+                        <thead>
+                            <tr>
+                                <th><input type="checkbox" id="selectAllParts" onchange="toggleSelectAllParts()"></th>
+                                <th>Peça</th>
+                                <th>Estoque Atual</th>
+                                <th>Estoque Mínimo</th>
+                                <th>Previsão de Próxima Troca</th>
+                                <th>Tempo Médio entre Trocas</th>
+                                <th>Custo Unitário (R$)</th>
+                                <th>Status de Saúde</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><input type="checkbox" class="part-select"></td>
+                                <td><input type="text" class="editable-cell" value="Filtro de Ar"></td>
+                                <td><input type="number" class="editable-cell" value="12" min="0"></td>
+                                <td><input type="number" class="editable-cell" value="5" min="0"></td>
+                                <td><input type="date" class="editable-cell" value=""></td>
+                                <td><input type="text" class="editable-cell" value="30 dias"></td>
+                                <td><input type="number" class="editable-cell" value="85" min="0"></td>
+                                <td><div class="health-status status-healthy">Saudável</div></td>
+                                <td class="action-cell">
+                                    <button class="action-btn save-btn" onclick="savePartRow(this)"><i class="fas fa-save"></i></button>
+                                    <button class="action-btn cancel-btn" onclick="cancelPartEdit(this)"><i class="fas fa-times"></i></button>
+                                    <button class="action-btn delete-btn" onclick="deletePartRow(this)"><i class="fas fa-trash"></i></button>
+                                </td>
+                            </tr>
+                            <tr class="low-stock">
+                                <td><input type="checkbox" class="part-select"></td>
+                                <td><input type="text" class="editable-cell" value="Lubrificante Hidráulico"></td>
+                                <td><input type="number" class="editable-cell" value="3" min="0"></td>
+                                <td><input type="number" class="editable-cell" value="5" min="0"></td>
+                                <td><input type="date" class="editable-cell" value=""></td>
+                                <td><input type="text" class="editable-cell" value="45 dias"></td>
+                                <td><input type="number" class="editable-cell" value="250" min="0"></td>
+                                <td><div class="health-status status-attention">Atenção</div></td>
+                                <td class="action-cell">
+                                    <button class="action-btn save-btn" onclick="savePartRow(this)"><i class="fas fa-save"></i></button>
+                                    <button class="action-btn cancel-btn" onclick="cancelPartEdit(this)"><i class="fas fa-times"></i></button>
+                                    <button class="action-btn delete-btn" onclick="deletePartRow(this)"><i class="fas fa-trash"></i></button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><input type="checkbox" class="part-select"></td>
+                                <td><input type="text" class="editable-cell" value="Correia Trapezoidal"></td>
+                                <td><input type="number" class="editable-cell" value="8" min="0"></td>
+                                <td><input type="number" class="editable-cell" value="3" min="0"></td>
+                                <td><input type="date" class="editable-cell" value=""></td>
+                                <td><input type="text" class="editable-cell" value="60 dias"></td>
+                                <td><input type="number" class="editable-cell" value="45" min="0"></td>
+                                <td><div class="health-status status-healthy">Saudável</div></td>
+                                <td class="action-cell">
+                                    <button class="action-btn save-btn" onclick="savePartRow(this)"><i class="fas fa-save"></i></button>
+                                    <button class="action-btn cancel-btn" onclick="cancelPartEdit(this)"><i class="fas fa-times"></i></button>
+                                    <button class="action-btn delete-btn" onclick="deletePartRow(this)"><i class="fas fa-trash"></i></button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><input type="checkbox" class="part-select"></td>
+                                <td><input type="text" class="editable-cell" value="Disco de Freio"></td>
+                                <td><input type="number" class="editable-cell" value="15" min="0"></td>
+                                <td><input type="number" class="editable-cell" value="5" min="0"></td>
+                                <td><input type="date" class="editable-cell" value=""></td>
+                                <td><input type="text" class="editable-cell" value="90 dias"></td>
+                                <td><input type="number" class="editable-cell" value="180" min="0"></td>
+                                <td><div class="health-status status-healthy">Saudável</div></td>
+                                <td class="action-cell">
+                                    <button class="action-btn save-btn" onclick="savePartRow(this)"><i class="fas fa-save"></i></button>
+                                    <button class="action-btn cancel-btn" onclick="cancelPartEdit(this)"><i class="fas fa-times"></i></button>
+                                    <button class="action-btn delete-btn" onclick="deletePartRow(this)"><i class="fas fa-trash"></i></button>
+                                </td>
+                            </tr>
+                            <tr class="low-stock">
+                                <td><input type="checkbox" class="part-select"></td>
+                                <td><input type="text" class="editable-cell" value="Junta O-Ring"></td>
+                                <td><input type="number" class="editable-cell" value="2" min="0"></td>
+                                <td><input type="number" class="editable-cell" value="10" min="0"></td>
+                                <td><input type="date" class="editable-cell" value=""></td>
+                                <td><input type="text" class="editable-cell" value="20 dias"></td>
+                                <td><input type="number" class="editable-cell" value="12" min="0"></td>
+                                <td><div class="health-status status-replace">Substituir</div></td>
+                                <td class="action-cell">
+                                    <button class="action-btn save-btn" onclick="savePartRow(this)"><i class="fas fa-save"></i></button>
+                                    <button class="action-btn cancel-btn" onclick="cancelPartEdit(this)"><i class="fas fa-times"></i></button>
+                                    <button class="action-btn delete-btn" onclick="deletePartRow(this)"><i class="fas fa-trash"></i></button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
 
             <!-- Seção de Histórico de Manutenção -->
@@ -305,178 +315,201 @@
                 </div>
 
                 <div class="table-actions">
-                    <button onclick="toggleEditMode()"><i class="fas fa-edit"></i> Modo Edição</button>
-                    <button onclick="saveChanges()"><i class="fas fa-save"></i> Salvar Alterações</button>
-                    <button onclick="updateAllCharts()"><i class="fas fa-chart-bar"></i> Atualizar Gráficos</button>
+                    <div class="search-and-filter">
+                        <div class="search-box">
+                            <i class="fas fa-search"></i>
+                            <input type="text" id="maintenanceSearch" onkeyup="filterMaintenanceTable()" placeholder="Pesquisar por componente...">
+                        </div>
+                        <div class="filter-group">
+                            <label for="status-filter"><i class="fas fa-flag"></i> Filtrar por Status:</label>
+                            <select id="status-filter" onchange="filterMaintenanceTable()">
+                                <option value="all">Todos</option>
+                                <option value="completed">Concluída</option>
+                                <option value="in-progress">Em Andamento</option>
+                                <option value="overdue">Atrasada</option>
+                                <option value="pending">Pendente</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="action-buttons">
+                        <button onclick="toggleEditMode()"><i class="fas fa-edit"></i> Modo Edição</button>
+                        <button onclick="saveChanges()"><i class="fas fa-save"></i> Salvar Alterações</button>
+                        <button onclick="updateAllCharts()"><i class="fas fa-chart-bar"></i> Atualizar Gráficos</button>
 
-                    <div class="import-export-section">
-                        <button class="import-btn" onclick="document.getElementById('importMaintenanceFile').click()">
-                            <i class="fas fa-file-import"></i> Importar Excel
-                        </button>
-                        <button class="export-btn" onclick="exportMaintenanceToExcel()">
-                            <i class="fas fa-file-export"></i> Exportar Excel
-                        </button>
-                        <input type="file" id="importMaintenanceFile" class="file-input-hidden" accept=".xlsx, .xls" onchange="importMaintenanceFromExcel(event)">
+                        <div class="import-export-section">
+                            <button class="import-btn" onclick="document.getElementById('importMaintenanceFile').click()">
+                                <i class="fas fa-file-import"></i> Importar Excel
+                            </button>
+                            <button class="export-btn" onclick="exportMaintenanceToExcel()">
+                                <i class="fas fa-file-export"></i> Exportar Excel
+                            </button>
+                            <button class="export-btn" onclick="exportMaintenanceToCsv()">
+                                <i class="fas fa-file-csv"></i> Exportar CSV
+                            </button>
+                            <input type="file" id="importMaintenanceFile" class="file-input-hidden" accept=".xlsx, .xls" onchange="importMaintenanceFromExcel(event)">
+                        </div>
                     </div>
                 </div>
 
-                <table id="maintenanceTable">
-                    <thead>
-                        <tr>
-                            <th><input type="checkbox" id="selectAll" onchange="toggleSelectAll()"></th>
-                            <th>ID Ordem</th>
-                            <th>Data</th>
-                            <th>Componente</th>
-                            <th>Tipo</th>
-                            <th>Status</th>
-                            <th>Custo (R$)</th>
-                            <th>Duração (horas)</th>
-                            <th>Ações</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><input type="checkbox" class="row-select"></td>
-                            <td><input type="text" class="editable-cell" value="#MT-2023-084"></td>
-                            <td><input type="date" class="editable-cell" value=""></td>
-                            <td><input type="text" class="editable-cell" value="Bomba Hidráulica"></td>
-                            <td>
-                                <select class="editable-cell">
-                                    <option>Preventiva</option>
-                                    <option>Corretiva</option>
-                                    <option>Preditiva</option>
-                                </select>
-                            </td>
-                            <td>
-                                <select class="editable-cell status-select">
-                                    <option value="completed">Concluída</option>
-                                    <option value="in-progress">Em Andamento</option>
-                                    <option value="overdue">Atrasada</option>
-                                    <option value="pending">Pendente</option>
-                                </select>
-                            </td>
-                            <td><input type="number" class="editable-cell" value="850"></td>
-                            <td><input type="number" class="editable-cell" value="0.75" step="0.25"></td>
-                            <td class="action-cell">
-                                <button class="action-btn save-btn" onclick="saveRow(this)"><i class="fas fa-save"></i></button>
-                                <button class="action-btn cancel-btn" onclick="cancelEdit(this)"><i class="fas fa-times"></i></button>
-                                <button class="action-btn delete-btn" onclick="deleteRow(this)"><i class="fas fa-trash"></i></button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><input type="checkbox" class="row-select"></td>
-                            <td><input type="text" class="editable-cell" value="#MT-2023-083"></td>
-                            <td><input type="date" class="editable-cell" value=""></td>
-                            <td><input type="text" class="editable-cell" value="Sistema de Resfriamento"></td>
-                            <td>
-                                <select class="editable-cell">
-                                    <option>Corretiva</option>
-                                    <option>Preventiva</option>
-                                    <option>Preditiva</option>
-                                </select>
-                            </td>
-                            <td>
-                                <select class="editable-cell status-select">
-                                    <option value="in-progress">Em Andamento</option>
-                                    <option value="completed">Concluída</option>
-                                    <option value="overdue">Atrasada</option>
-                                    <option value="pending">Pendente</option>
-                                </select>
-                            </td>
-                            <td><input type="number" class="editable-cell" value="1200"></td>
-                            <td><input type="number" class="editable-cell" value="2" step="0.25"></td>
-                            <td class="action-cell">
-                                <button class="action-btn save-btn" onclick="saveRow(this)"><i class="fas fa-save"></i></button>
-                                <button class="action-btn cancel-btn" onclick="cancelEdit(this)"><i class="fas fa-times"></i></button>
-                                <button class="action-btn delete-btn" onclick="deleteRow(this)"><i class="fas fa-trash"></i></button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><input type="checkbox" class="row-select"></td>
-                            <td><input type="text" class="editable-cell" value="#MT-2023-082"></td>
-                            <td><input type="date" class="editable-cell" value=""></td>
-                            <td><input type="text" class="editable-cell" value="Mangueira Principal"></td>
-                            <td>
-                                <select class="editable-cell">
-                                    <option>Preventiva</option>
-                                    <option>Corretiva</option>
-                                    <option>Preditiva</option>
-                                </select>
-                            </td>
-                            <td>
-                                <select class="editable-cell status-select">
-                                    <option value="completed">Concluída</option>
-                                    <option value="in-progress">Em Andamento</option>
-                                    <option value="overdue">Atrasada</option>
-                                    <option value="pending">Pendente</option>
-                                </select>
-                            </td>
-                            <td><input type="number" class="editable-cell" value="350"></td>
-                            <td><input type="number" class="editable-cell" value="0.5" step="0.25"></td>
-                            <td class="action-cell">
-                                <button class="action-btn save-btn" onclick="saveRow(this)"><i class="fas fa-save"></i></button>
-                                <button class="action-btn cancel-btn" onclick="cancelEdit(this)"><i class="fas fa-times"></i></button>
-                                <button class="action-btn delete-btn" onclick="deleteRow(this)"><i class="fas fa-trash"></i></button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><input type="checkbox" class="row-select"></td>
-                            <td><input type="text" class="editable-cell" value="#MT-2023-081"></td>
-                            <td><input type="date" class="editable-cell" value=""></td>
-                            <td><input type="text" class="editable-cell" value="Válvula Direcional"></td>
-                            <td>
-                                <select class="editable-cell">
-                                    <option>Corretiva</option>
-                                    <option>Preventiva</option>
-                                    <option>Preditiva</option>
-                                </select>
-                            </td>
-                            <td>
-                                <select class="editable-cell status-select">
-                                    <option value="overdue">Atrasada</option>
-                                    <option value="completed">Concluída</option>
-                                    <option value="in-progress">Em Andamento</option>
-                                    <option value="pending">Pendente</option>
-                                </select>
-                            </td>
-                            <td><input type="number" class="editable-cell" value="2100"></td>
-                            <td><input type="number" class="editable-cell" value="3" step="0.25"></td>
-                            <td class="action-cell">
-                                <button class="action-btn save-btn" onclick="saveRow(this)"><i class="fas fa-save"></i></button>
-                                <button class="action-btn cancel-btn" onclick="cancelEdit(this)"><i class="fas fa-times"></i></button>
-                                <button class="action-btn delete-btn" onclick="deleteRow(this)"><i class="fas fa-trash"></i></button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><input type="checkbox" class="row-select"></td>
-                            <td><input type="text" class="editable-cell" value="#MT-2023-080"></td>
-                            <td><input type="date" class="editable-cell" value=""></td>
-                            <td><input type="text" class="editable-cell" value="Bloco Hidráulico"></td>
-                            <td>
-                                <select class="editable-cell">
-                                    <option>Preventiva</option>
-                                    <option>Corretiva</option>
-                                    <option>Preditiva</option>
-                                </select>
-                            </td>
-                            <td>
-                                <select class="editable-cell status-select">
-                                    <option value="completed">Concluída</option>
-                                    <option value="in-progress">Em Andamento</option>
-                                    <option value="overdue">Atrasada</option>
-                                    <option value="pending">Pendente</option>
-                                </select>
-                            </td>
-                            <td><input type="number" class="editable-cell" value="1500"></td>
-                            <td><input type="number" class="editable-cell" value="1" step="0.25"></td>
-                            <td class="action-cell">
-                                <button class="action-btn save-btn" onclick="saveRow(this)"><i class="fas fa-save"></i></button>
-                                <button class="action-btn cancel-btn" onclick="cancelEdit(this)"><i class="fas fa-times"></i></button>
-                                <button class="action-btn delete-btn" onclick="deleteRow(this)"><i class="fas fa-trash"></i></button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                <div class="table-container">
+                    <table id="maintenanceTable">
+                        <thead>
+                            <tr>
+                                <th><input type="checkbox" id="selectAll" onchange="toggleSelectAll()"></th>
+                                <th>ID Ordem</th>
+                                <th>Data</th>
+                                <th>Componente</th>
+                                <th>Tipo</th>
+                                <th>Status</th>
+                                <th>Custo (R$)</th>
+                                <th>Duração (horas)</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><input type="checkbox" class="row-select"></td>
+                                <td><input type="text" class="editable-cell" value="#MT-2023-084"></td>
+                                <td><input type="date" class="editable-cell" value=""></td>
+                                <td><input type="text" class="editable-cell" value="Bomba Hidráulica"></td>
+                                <td>
+                                    <select class="editable-cell">
+                                        <option>Preventiva</option>
+                                        <option>Corretiva</option>
+                                        <option>Preditiva</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <select class="editable-cell status-select">
+                                        <option value="completed">Concluída</option>
+                                        <option value="in-progress">Em Andamento</option>
+                                        <option value="overdue">Atrasada</option>
+                                        <option value="pending">Pendente</option>
+                                    </select>
+                                </td>
+                                <td><input type="number" class="editable-cell" value="850"></td>
+                                <td><input type="number" class="editable-cell" value="0.75" step="0.25"></td>
+                                <td class="action-cell">
+                                    <button class="action-btn save-btn" onclick="saveRow(this)"><i class="fas fa-save"></i></button>
+                                    <button class="action-btn cancel-btn" onclick="cancelEdit(this)"><i class="fas fa-times"></i></button>
+                                    <button class="action-btn delete-btn" onclick="deleteRow(this)"><i class="fas fa-trash"></i></button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><input type="checkbox" class="row-select"></td>
+                                <td><input type="text" class="editable-cell" value="#MT-2023-083"></td>
+                                <td><input type="date" class="editable-cell" value=""></td>
+                                <td><input type="text" class="editable-cell" value="Sistema de Resfriamento"></td>
+                                <td>
+                                    <select class="editable-cell">
+                                        <option>Corretiva</option>
+                                        <option>Preventiva</option>
+                                        <option>Preditiva</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <select class="editable-cell status-select">
+                                        <option value="in-progress">Em Andamento</option>
+                                        <option value="completed">Concluída</option>
+                                        <option value="overdue">Atrasada</option>
+                                        <option value="pending">Pendente</option>
+                                    </select>
+                                </td>
+                                <td><input type="number" class="editable-cell" value="1200"></td>
+                                <td><input type="number" class="editable-cell" value="2" step="0.25"></td>
+                                <td class="action-cell">
+                                    <button class="action-btn save-btn" onclick="saveRow(this)"><i class="fas fa-save"></i></button>
+                                    <button class="action-btn cancel-btn" onclick="cancelEdit(this)"><i class="fas fa-times"></i></button>
+                                    <button class="action-btn delete-btn" onclick="deleteRow(this)"><i class="fas fa-trash"></i></button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><input type="checkbox" class="row-select"></td>
+                                <td><input type="text" class="editable-cell" value="#MT-2023-082"></td>
+                                <td><input type="date" class="editable-cell" value=""></td>
+                                <td><input type="text" class="editable-cell" value="Mangueira Principal"></td>
+                                <td>
+                                    <select class="editable-cell">
+                                        <option>Preventiva</option>
+                                        <option>Corretiva</option>
+                                        <option>Preditiva</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <select class="editable-cell status-select">
+                                        <option value="completed">Concluída</option>
+                                        <option value="in-progress">Em Andamento</option>
+                                        <option value="overdue">Atrasada</option>
+                                        <option value="pending">Pendente</option>
+                                    </select>
+                                </td>
+                                <td><input type="number" class="editable-cell" value="350"></td>
+                                <td><input type="number" class="editable-cell" value="0.5" step="0.25"></td>
+                                <td class="action-cell">
+                                    <button class="action-btn save-btn" onclick="saveRow(this)"><i class="fas fa-save"></i></button>
+                                    <button class="action-btn cancel-btn" onclick="cancelEdit(this)"><i class="fas fa-times"></i></button>
+                                    <button class="action-btn delete-btn" onclick="deleteRow(this)"><i class="fas fa-trash"></i></button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><input type="checkbox" class="row-select"></td>
+                                <td><input type="text" class="editable-cell" value="#MT-2023-081"></td>
+                                <td><input type="date" class="editable-cell" value=""></td>
+                                <td><input type="text" class="editable-cell" value="Válvula Direcional"></td>
+                                <td>
+                                    <select class="editable-cell">
+                                        <option>Corretiva</option>
+                                        <option>Preventiva</option>
+                                        <option>Preditiva</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <select class="editable-cell status-select">
+                                        <option value="overdue">Atrasada</option>
+                                        <option value="completed">Concluída</option>
+                                        <option value="in-progress">Em Andamento</option>
+                                        <option value="pending">Pendente</option>
+                                    </select>
+                                </td>
+                                <td><input type="number" class="editable-cell" value="2100"></td>
+                                <td><input type="number" class="editable-cell" value="3" step="0.25"></td>
+                                <td class="action-cell">
+                                    <button class="action-btn save-btn" onclick="saveRow(this)"><i class="fas fa-save"></i></button>
+                                    <button class="action-btn cancel-btn" onclick="cancelEdit(this)"><i class="fas fa-times"></i></button>
+                                    <button class="action-btn delete-btn" onclick="deleteRow(this)"><i class="fas fa-trash"></i></button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><input type="checkbox" class="row-select"></td>
+                                <td><input type="text" class="editable-cell" value="#MT-2023-080"></td>
+                                <td><input type="date" class="editable-cell" value=""></td>
+                                <td><input type="text" class="editable-cell" value="Bloco Hidráulico"></td>
+                                <td>
+                                    <select class="editable-cell">
+                                        <option>Preventiva</option>
+                                        <option>Corretiva</option>
+                                        <option>Preditiva</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <select class="editable-cell status-select">
+                                        <option value="completed">Concluída</option>
+                                        <option value="in-progress">Em Andamento</option>
+                                        <option value="overdue">Atrasada</option>
+                                        <option value="pending">Pendente</option>
+                                    </select>
+                                </td>
+                                <td><input type="number" class="editable-cell" value="1500"></td>
+                                <td><input type="number" class="editable-cell" value="1" step="0.25"></td>
+                                <td class="action-cell">
+                                    <button class="action-btn save-btn" onclick="saveRow(this)"><i class="fas fa-save"></i></button>
+                                    <button class="action-btn cancel-btn" onclick="cancelEdit(this)"><i class="fas fa-times"></i></button>
+                                    <button class="action-btn delete-btn" onclick="deleteRow(this)"><i class="fas fa-trash"></i></button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
 
             <!-- Seção de Registro de Falhas -->
@@ -505,67 +538,72 @@
                         <button class="export-btn" onclick="exportFracasToExcel()">
                             <i class="fas fa-file-export"></i> Exportar Excel
                         </button>
+                        <button class="export-btn" onclick="exportFracasToCsv()">
+                            <i class="fas fa-file-csv"></i> Exportar CSV
+                        </button>
                         <input type="file" id="importFracasFile" class="file-input-hidden" accept=".xlsx, .xls" onchange="importFracasFromExcel(event)">
                     </div>
                 </div>
-                <table class="critical-parts-table" id="fracasTable">
-                    <thead>
-                        <tr>
-                            <th><input type="checkbox" id="selectAllFracas" onchange="toggleSelectAllFracas()"></th>
-                            <th>Data/Hora</th>
-                            <th>Sintoma</th>
-                            <th>Causa Provável</th>
-                            <th>Ação Corretiva</th>
-                            <th>Responsável</th>
-                            <th>Tempo Solução (horas)</th>
-                            <th>Ações</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><input type="checkbox" class="fracas-select"></td>
-                            <td><input type="datetime-local" class="editable-cell" value=""></td>
-                            <td><input type="text" class="editable-cell" value="Vibração excessiva no eixo Z"></td>
-                            <td><input type="text" class="editable-cell" value="Desalinhamento do encoder"></td>
-                            <td><input type="text" class="editable-cell" value="Realinhamento e recalibração"></td>
-                            <td><input type="text" class="editable-cell" value="Carlos Oliveira"></td>
-                            <td><input type="number" class="editable-cell" value="2.5" step="0.1"></td>
-                            <td class="action-cell">
-                                <button class="action-btn save-btn" onclick="saveFracasRow(this)"><i class="fas fa-save"></i></button>
-                                <button class="action-btn cancel-btn" onclick="cancelFracasEdit(this)"><i class="fas fa-times"></i></button>
-                                <button class="action-btn delete-btn" onclick="deleteFracasRow(this)"><i class="fas fa-trash"></i></button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><input type="checkbox" class="fracas-select"></td>
-                            <td><input type="datetime-local" class="editable-cell" value=""></td>
-                            <td><input type="text" class="editable-cell" value="Superaquecimento do motor"></td>
-                            <td><input type="text" class="editable-cell" value="Falha no sistema de ventilação"></td>
-                            <td><input type="text" class="editable-cell" value="Limpeza e substituição do filtro"></td>
-                            <td><input type="text" class="editable-cell" value="Maria Silva"></td>
-                            <td><input type="number" class="editable-cell" value="1.2" step="0.1"></td>
-                            <td class="action-cell">
-                                <button class="action-btn save-btn" onclick="saveFracasRow(this)"><i class="fas fa-save"></i></button>
-                                <button class="action-btn cancel-btn" onclick="cancelFracasEdit(this)"><i class="fas fa-times"></i></button>
-                                <button class="action-btn delete-btn" onclick="deleteFracasRow(this)"><i class="fas fa-trash"></i></button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><input type="checkbox" class="fracas-select"></td>
-                            <td><input type="datetime-local" class="editable-cell" value=""></td>
-                            <td><input type="text" class="editable-cell" value="Perda de precisão dimensional"></td>
-                            <td><input type="text" class="editable-cell" value="Desgaste da ferramenta"></td>
-                            <td><input type="text" class="editable-cell" value="Substituição da ferramenta e recalibração"></td>
-                            <td><input type="text" class="editable-cell" value="João Santos"></td>
-                            <td><input type="number" class="editable-cell" value="3.0" step="0.1"></td>
-                            <td class="action-cell">
-                                <button class="action-btn save-btn" onclick="saveFracasRow(this)"><i class="fas fa-save"></i></button>
-                                <button class="action-btn cancel-btn" onclick="cancelFracasEdit(this)"><i class="fas fa-times"></i></button>
-                                <button class="action-btn delete-btn" onclick="deleteFracasRow(this)"><i class="fas fa-trash"></i></button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                <div class="table-container">
+                    <table class="critical-parts-table" id="fracasTable">
+                        <thead>
+                            <tr>
+                                <th><input type="checkbox" id="selectAllFracas" onchange="toggleSelectAllFracas()"></th>
+                                <th>Data/Hora</th>
+                                <th>Sintoma</th>
+                                <th>Causa Provável</th>
+                                <th>Ação Corretiva</th>
+                                <th>Responsável</th>
+                                <th>Tempo Solução (horas)</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><input type="checkbox" class="fracas-select"></td>
+                                <td><input type="datetime-local" class="editable-cell" value=""></td>
+                                <td><input type="text" class="editable-cell" value="Vibração excessiva no eixo Z"></td>
+                                <td><input type="text" class="editable-cell" value="Desalinhamento do encoder"></td>
+                                <td><input type="text" class="editable-cell" value="Realinhamento e recalibração"></td>
+                                <td><input type="text" class="editable-cell" value="Carlos Oliveira"></td>
+                                <td><input type="number" class="editable-cell" value="2.5" step="0.1"></td>
+                                <td class="action-cell">
+                                    <button class="action-btn save-btn" onclick="saveFracasRow(this)"><i class="fas fa-save"></i></button>
+                                    <button class="action-btn cancel-btn" onclick="cancelFracasEdit(this)"><i class="fas fa-times"></i></button>
+                                    <button class="action-btn delete-btn" onclick="deleteFracasRow(this)"><i class="fas fa-trash"></i></button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><input type="checkbox" class="fracas-select"></td>
+                                <td><input type="datetime-local" class="editable-cell" value=""></td>
+                                <td><input type="text" class="editable-cell" value="Superaquecimento do motor"></td>
+                                <td><input type="text" class="editable-cell" value="Falha no sistema de ventilação"></td>
+                                <td><input type="text" class="editable-cell" value="Limpeza e substituição do filtro"></td>
+                                <td><input type="text" class="editable-cell" value="Maria Silva"></td>
+                                <td><input type="number" class="editable-cell" value="1.2" step="0.1"></td>
+                                <td class="action-cell">
+                                    <button class="action-btn save-btn" onclick="saveFracasRow(this)"><i class="fas fa-save"></i></button>
+                                    <button class="action-btn cancel-btn" onclick="cancelFracasEdit(this)"><i class="fas fa-times"></i></button>
+                                    <button class="action-btn delete-btn" onclick="deleteFracasRow(this)"><i class="fas fa-trash"></i></button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><input type="checkbox" class="fracas-select"></td>
+                                <td><input type="datetime-local" class="editable-cell" value=""></td>
+                                <td><input type="text" class="editable-cell" value="Perda de precisão dimensional"></td>
+                                <td><input type="text" class="editable-cell" value="Desgaste da ferramenta"></td>
+                                <td><input type="text" class="editable-cell" value="Substituição da ferramenta e recalibração"></td>
+                                <td><input type="text" class="editable-cell" value="João Santos"></td>
+                                <td><input type="number" class="editable-cell" value="3.0" step="0.1"></td>
+                                <td class="action-cell">
+                                    <button class="action-btn save-btn" onclick="saveFracasRow(this)"><i class="fas fa-save"></i></button>
+                                    <button class="action-btn cancel-btn" onclick="cancelFracasEdit(this)"><i class="fas fa-times"></i></button>
+                                    <button class="action-btn delete-btn" onclick="deleteFracasRow(this)"><i class="fas fa-trash"></i></button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
 
             <!-- Seção de Configurações -->
